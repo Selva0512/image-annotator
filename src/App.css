@@ -1,0 +1,453 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0D0D0F;
+  --surface: #141416;
+  --surface2: #1C1C1F;
+  --border: #2A2A2E;
+  --border-bright: #3A3A3F;
+  --text: #E8E8EC;
+  --text-dim: #888890;
+  --text-dimmer: #555560;
+  --accent: #FF3B5C;
+  --accent2: #0A84FF;
+  --mono: 'DM Mono', monospace;
+  --display: 'Space Mono', monospace;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── App Layout ─────────────────────────────────── */
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 52px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.logo-icon {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.logo-text {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.15em;
+  color: var(--text);
+}
+
+.logo-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.annotation-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  padding: 5px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--text-dim); color: var(--text); }
+
+.btn-export {
+  background: var(--accent);
+  border: none;
+  color: white;
+  padding: 5px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-export:hover { opacity: 0.85; }
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Sidebars ───────────────────────────────────── */
+.sidebar-left, .sidebar-right {
+  width: 180px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.sidebar-right {
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+/* ─── Toolbar ────────────────────────────────────── */
+.toolbar {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.toolbar-section { display: flex; flex-direction: column; gap: 8px; }
+
+.toolbar-label {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-dimmer);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.tool-buttons { display: flex; flex-direction: column; gap: 2px; }
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+  text-align: left;
+}
+
+.tool-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.tool-btn.active {
+  background: var(--surface2);
+  border-color: var(--border-bright);
+  color: var(--text);
+}
+
+.tool-icon { font-size: 14px; width: 18px; text-align: center; }
+.tool-name { font-size: 11px; }
+
+/* Color swatches */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.color-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--swatch-color);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.color-swatch:hover { transform: scale(1.15); }
+.color-swatch.active { border-color: white; }
+
+.color-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.color-picker {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+
+.color-value {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.label-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 9px;
+  font-family: var(--mono);
+  font-size: 11px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.label-input:focus { border-color: var(--border-bright); }
+.label-input::placeholder { color: var(--text-dimmer); }
+
+.tips { margin-top: auto; }
+
+.tip-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--text-dimmer);
+  font-size: 10px;
+}
+
+/* ─── Canvas ─────────────────────────────────────── */
+.canvas-area {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  position: relative;
+}
+
+.canvas-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ─── Label Editor Overlay ───────────────────────── */
+.label-editor {
+  position: absolute;
+  z-index: 100;
+  pointer-events: all;
+}
+
+.label-editor input {
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 5px 9px;
+  font-family: var(--mono);
+  font-size: 12px;
+  outline: none;
+  min-width: 160px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* ─── Image Uploader ─────────────────────────────── */
+.uploader-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.uploader {
+  width: 480px;
+  height: 280px;
+  border: 1px dashed var(--border-bright);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.uploader:hover, .uploader.dragging {
+  border-color: var(--accent);
+  background: rgba(255, 59, 92, 0.04);
+}
+
+.uploader-icon {
+  font-size: 40px;
+  color: var(--text-dimmer);
+  line-height: 1;
+}
+
+.uploader-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+
+.uploader-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.sample-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sample-label {
+  font-size: 11px;
+  color: var(--text-dimmer);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sample-images {
+  display: flex;
+  gap: 8px;
+}
+
+.sample-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 6px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.12s;
+  letter-spacing: 0.05em;
+}
+
+.sample-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--text);
+}
+
+/* ─── Annotation List ────────────────────────────── */
+.annotation-list {
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-heading {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-dimmer);
+  text-transform: uppercase;
+}
+
+.list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.1s;
+}
+
+.list-item:hover { background: var(--surface2); }
+.list-item.active { background: var(--surface2); border-color: var(--border); }
+
+.list-icon { font-size: 14px; flex-shrink: 0; }
+
+.list-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.list-type {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--text-dimmer);
+}
+
+.list-label {
+  font-size: 11px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-label em { color: var(--text-dimmer); font-style: normal; }
+
+.list-actions {
+  display: flex;
+  gap: 3px;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.list-item:hover .list-actions { opacity: 1; }
+
+.list-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color 0.1s;
+}
+
+.list-btn:hover { color: var(--text); }
+.list-btn.danger:hover { color: var(--accent); }
+
+/* ─── Scrollbar ──────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-bright); }
